@@ -32,9 +32,9 @@ User.findById(id).then((user) => {
 //     console.log(`Todo: ${todo}`);
 // });
 
-// Todo.findById(id).then((todo) => {
-//     if (!todo) {
-//         return console.log('Id not found');
-//     }
-//     console.log(`Todo by id: ${todo}`);
-// }).catch((e) => console.log(e));
+Todo.findById(id).then((todo) => {
+    if (!todo) {
+        return console.log('Id not found');
+    }
+    console.log(`Todo by id: ${todo}`);
+}).catch((e) => console.log(e));
