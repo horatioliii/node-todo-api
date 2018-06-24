@@ -33,4 +33,4 @@ console.log(`Decoded: ${JSON.stringify(decoded)}`);
 //     console.log('data was not changed');
 // } else {
 //     console.log('data was changed. do not trust');
-// };
+// }

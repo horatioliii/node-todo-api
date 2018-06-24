@@ -8,6 +8,7 @@ const {ObjectID} = require('mongodb');
 let {mongoose} = require('./db/mongoose');
 let {Todo} = require('./models/todo');
 let {User} = require('./models/user');
+let {authenticate} = require('./middleware/authenticate');
 
 let app = express();
 const port = process.env.PORT || 3000;
@@ -39,7 +40,7 @@ app.get('/todos/:id', (req, res) => {
 
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
-    };
+    }
 
     Todo.findById(id).then((todo) => {
         if (!todo) {
@@ -57,19 +58,19 @@ app.patch('/todos/:id', (req, res) => {
 
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
-    };
+    }
 
     if (_.isBoolean(body.completed) && body.completed === true) {
         body.completedAt = new Date().getTime();
     } else {
         body.completed = false;
         body.completedAt = null;
-    };
+    }
 
     Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
         if (!todo) {
             return res.status(404).send();
-        };
+        }
         res.send({todo});
     }).catch((e) => {
         res.status(400).send();
@@ -81,7 +82,7 @@ app.delete('/todos/:id', (req, res) => {
 
     if (!ObjectID.isValid(id)) {
         return res.status(404).send();
-    };
+    }
 
     Todo.findByIdAndRemove(id).then((todo) => {
         if (!todo) {
@@ -103,7 +104,11 @@ app.post('/users', (req, res) => {
         res.header('x-auth', token).send(user);
     }).catch((e) => {
         res.status(400).send(e);
-    })
+    });
+});
+
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user);
 });
 
 app.listen(port, () => {
